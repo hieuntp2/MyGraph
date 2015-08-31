@@ -6,12 +6,14 @@ using System.Threading.Tasks;
 
 namespace MyGraphs
 {
-    class MyGraphNode
+    public class MyGraphNode
     {
         protected int m_iIndex;
+        protected int m_iLable;
 
-        public MyGraphNode(int index) {
+        public MyGraphNode(int index = 0) {
             this.m_iIndex = index;
+            this.m_iLable = 0;
         }
 
         public void SetIndex(int new_index) {
@@ -50,6 +52,14 @@ namespace MyGraphs
         public void setInvalid() 
         {
             this.m_iIndex = -1;
+        }
+
+        public void SetLable(int lable) {
+            this.m_iLable = lable;
+        }
+
+        public int GetLable() {
+            return this.m_iLable;
         }
     }
 }

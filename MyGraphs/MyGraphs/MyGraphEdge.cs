@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MyGraphs
 {
-    class MyGraphEdge
+    public class MyGraphEdge
     {
         protected int m_iFrom;
         protected int m_iTo;
@@ -24,6 +24,10 @@ namespace MyGraphs
 
         public int GetTo() {
             return m_iTo;
+        }
+
+        public float GetCost() {
+            return m_dCost;        
         }
     }
 }

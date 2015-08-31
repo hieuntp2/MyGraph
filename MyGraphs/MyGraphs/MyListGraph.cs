@@ -9,20 +9,25 @@ namespace MyGraphs
     /// <summary>
     /// Đồ thị chỉ chấp nhận 2 đỉnh chỉ có 1 cạnh duy nhất (nếu đồ thị có hướng là 2 cạnh, vô hướng là 1 cạnh).
     /// </summary>
-    public class MySparseGraph
+    public class MyListGraph
     {
         protected List<MyGraphNode> m_Nodes;
-        protected List<MyGraphEdge> m_Edges;
 
         private bool m_bDigraph;
-        private int m_iNextNodeIndex;
+        private int m_iNumEdge;
 
-        public MySparseGraph()
+        Dictionary<int, List<MyListGraphEdge>> m_DListNode;
+
+        public MyListGraph(bool isDirectGraph = false)
         {
-            m_iNextNodeIndex = 0;
+            m_iNumEdge = 0;
             m_bDigraph = false;
+            m_DListNode = new Dictionary<int, List<MyListGraphEdge>>();
+            m_Nodes = new List<MyGraphNode>();
+            m_bDigraph = isDirectGraph;
         }
 
+        #region Basic Function
         public MyGraphNode GetNode(int index)
         {
             for (int i = 0; i < m_Nodes.Count; i++)
@@ -37,11 +42,18 @@ namespace MyGraphs
 
         public MyGraphEdge GetEdge(int from, int to)
         {
-            for (int i = 0; i < m_Edges.Count; i++)
+            // Nếu id < số lượng node có nghĩa là node đó ko tồn tại
+            if (!isPresent(from) || !isPresent(to))
             {
-                if (m_Edges[i].GetFrom() == from && m_Edges[i].GetTo() == to)
+                return null;
+            }
+
+            for (int i = 0; i < m_DListNode[from].Count; i++)
+            {
+                if (m_DListNode[from][i].GetTo() == to)
                 {
-                    return m_Edges[i];
+                    MyGraphEdge result = new MyGraphEdge(from, m_DListNode[from][i].GetTo(), m_DListNode[from][i].GetCost());
+                    return result;
                 }
             }
 
@@ -50,7 +62,7 @@ namespace MyGraphs
 
         public int GetNextFreeNodeIndex()
         {
-            return m_iNextNodeIndex;
+            return m_Nodes.Count;
         }
 
         /// <summary>
@@ -61,7 +73,6 @@ namespace MyGraphs
         public int AddNode(MyGraphNode node)
         {
             node.setIndex(index: GetNextFreeNodeIndex());
-            m_iNextNodeIndex += 1;
 
             if (true)
             {
@@ -93,21 +104,46 @@ namespace MyGraphs
 
         public bool AddEdge(MyGraphEdge edge)
         {
-            m_Edges.Add(edge);
+            if (!isPresent(edge.GetFrom()) || !isPresent(edge.GetTo()))
+            {
+                return false;
+            }
+
+            int from = edge.GetFrom();
+            int to = edge.GetTo();
+            float cost = edge.GetCost();
+
+            if (m_DListNode.ContainsKey(from))
+            {
+                m_DListNode[edge.GetFrom()].Add(new MyListGraphEdge(to, cost));
+            }
+            else
+            {
+                m_DListNode.Add(from, new List<MyListGraphEdge>());
+                m_DListNode[from].Add(new MyListGraphEdge(to, cost));
+            }
+            m_iNumEdge++;
             return true;
         }
 
         public bool RemoveEdge(int from, int to)
         {
-            for (int i = 0; i < m_Edges.Count; i++)
+            if (!isPresent(from) || !isPresent(to))
             {
-                if (m_Edges[i].GetFrom() == from && m_Edges[i].GetTo() == to)
+                return false;
+            }
+            if (m_DListNode.ContainsKey(from))
+            {
+                for (int i = 0; i < m_DListNode[from].Count; i++)
                 {
-                    m_Edges.Remove(m_Edges[i]);
-                    return true;
+                    if (m_DListNode[from][i].GetTo() == to)
+                    {
+                        m_DListNode[from].RemoveAt(i);
+                        return true;
+                    }
                 }
             }
-
+            m_iNumEdge--;
             return false;
         }
 
@@ -145,7 +181,7 @@ namespace MyGraphs
         /// <returns></returns>
         public int NumEdges()
         {
-            return m_Edges.Count;
+            return m_iNumEdge;
         }
 
         /// <summary>
@@ -188,6 +224,16 @@ namespace MyGraphs
             return false;
         }
 
+        public bool isDiGraph()
+        {
+            return m_bDigraph;
+        }
+
+        public void setDiGraph(bool isDiGraph)
+        {
+            this.m_bDigraph = isDiGraph;
+        }
+
         //methods for loading and saving graphs from an open file 
         public bool Save(string FileName)
         {
@@ -204,9 +250,70 @@ namespace MyGraphs
         /// </summary>
         public void Clear()
         {
-            this.m_Edges.Clear();
             this.m_Nodes.Clear();
+            this.m_DListNode.Clear();
         }
+
+        #endregion
+
+
+        // Function
+        #region Advance Function
+
+        public int SoMienDoThiLienThong()
+        {
+            if (isEmpty())
+            {
+                return 0;
+            }
+
+            int lable = 0;
+
+            for (int i = 0; i < m_Nodes.Count; i++)
+            {
+                if (m_Nodes[i].GetLable() == 0)
+                {
+                    lable += 1;
+                    Visit(m_Nodes[i],ref lable);
+                }
+            }
+
+            return lable;
+        }
+
+        protected void Visit(MyGraphNode node,ref int lable)
+        {
+            node.SetLable(lable);
+            if (m_DListNode.ContainsKey(node.getIndex()))
+            {
+                for (int i = 0; i < m_DListNode[node.getIndex()].Count; i++)
+                {
+                    int from = node.getIndex();
+                    int to = m_DListNode[from][i].GetTo();
+                    if (m_Nodes[to].GetLable() == 0)
+                    {
+                        Visit(m_Nodes[to],ref lable);
+                    }
+                    else
+                    {
+                      //  UpdateLable(lable, m_Nodes[to].GetLable());
+                        lable = m_Nodes[to].GetLable();
+                    }
+                }
+            }
+        }
+
+        protected void UpdateLable(int oldLable, int newLable)
+        {
+            for (int i = 0; i < m_Nodes.Count; i++)
+            {
+                if (m_Nodes[i].GetLable() == oldLable)
+                {
+                    m_Nodes[i].SetLable(newLable);
+                }
+            }
+        }
+        #endregion
 
     }
 }

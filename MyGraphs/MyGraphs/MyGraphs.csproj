@@ -40,7 +40,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MyGraphEdge.cs" />
+    <Compile Include="MyListGraph.cs" />
     <Compile Include="MyGraphNode.cs" />
+    <Compile Include="MyListGraphEdge.cs" />
     <Compile Include="MySparseGraph.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
