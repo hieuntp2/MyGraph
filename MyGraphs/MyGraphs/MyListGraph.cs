@@ -254,6 +254,59 @@ namespace MyGraphs
             this.m_DListNode.Clear();
         }
 
+
+        /// <summary>
+        ///  Xóa khuyên và cạnh song song
+        /// </summary>
+        public void MakeSimpleGraph()
+        {
+            for (int i = 0; i < m_Nodes.Count; i++)
+            {
+                int from = m_Nodes[i].getIndex();
+
+                if (m_DListNode.ContainsKey(from))
+                {
+                    for (int j = 0; j < m_DListNode[from].Count; j++)
+                    {
+                        // Xóa cạnh khuyên
+                        int to = m_DListNode[from][j].GetTo();
+                        if (to == from)
+                        {
+                            m_DListNode[from].RemoveAt(j);
+                        }
+
+                        // Xóa cạnh song song
+                        if (m_DListNode.ContainsKey(to))
+                        {
+                            for (int k = 0; k < m_DListNode[to].Count; k++)
+                            {
+                                if (m_DListNode[to][k].GetTo() == from)
+                                {
+                                    m_DListNode[to].RemoveAt(k);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private bool CheckEdgeContaint(int from, int to)
+        {
+            if (m_DListNode.ContainsKey(from))
+            {
+                for (int i = 0; i < m_DListNode[to].Count; i++)
+                {
+                    if (m_DListNode[from][i].GetTo() == from)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
         #endregion
 
 
@@ -274,14 +327,14 @@ namespace MyGraphs
                 if (m_Nodes[i].GetLable() == 0)
                 {
                     lable += 1;
-                    Visit(m_Nodes[i],ref lable);
+                    Visit(m_Nodes[i], ref lable);
                 }
             }
 
             return lable;
         }
 
-        protected void Visit(MyGraphNode node,ref int lable)
+        protected void Visit(MyGraphNode node, ref int lable)
         {
             node.SetLable(lable);
             if (m_DListNode.ContainsKey(node.getIndex()))
@@ -292,11 +345,11 @@ namespace MyGraphs
                     int to = m_DListNode[from][i].GetTo();
                     if (m_Nodes[to].GetLable() == 0)
                     {
-                        Visit(m_Nodes[to],ref lable);
+                        Visit(m_Nodes[to], ref lable);
                     }
                     else
                     {
-                      //  UpdateLable(lable, m_Nodes[to].GetLable());
+                        //  UpdateLable(lable, m_Nodes[to].GetLable());
                         lable = m_Nodes[to].GetLable();
                     }
                 }
