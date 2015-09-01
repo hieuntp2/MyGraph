@@ -25,5 +25,7 @@ namespace UnitTestProject1
            
             Assert.AreEqual(1,graph.SoMienDoThiLienThong());
         }
+
+
     }
 }

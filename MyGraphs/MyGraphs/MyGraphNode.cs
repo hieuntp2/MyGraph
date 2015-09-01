@@ -11,12 +11,14 @@ namespace MyGraphs
         protected int m_iIndex;
         protected int m_iLable;
 
-        public MyGraphNode(int index = 0) {
+        public MyGraphNode(int index = 0)
+        {
             this.m_iIndex = index;
             this.m_iLable = 0;
         }
 
-        public void SetIndex(int new_index) {
+        public void SetIndex(int new_index)
+        {
             this.m_iIndex = new_index;
         }
 
@@ -31,7 +33,8 @@ namespace MyGraphs
             return ValidateIndex();
         }
 
-        private bool ValidateIndex() {
+        private bool ValidateIndex()
+        {
             if (m_iIndex < 0)
             {
                 return false;
@@ -49,16 +52,18 @@ namespace MyGraphs
             else { return false; }
         }
 
-        public void setInvalid() 
+        public void setInvalid()
         {
             this.m_iIndex = -1;
         }
 
-        public void SetLable(int lable) {
+        public void SetLable(int lable)
+        {
             this.m_iLable = lable;
         }
 
-        public int GetLable() {
+        public int GetLable()
+        {
             return this.m_iLable;
         }
     }

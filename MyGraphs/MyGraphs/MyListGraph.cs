@@ -18,6 +18,10 @@ namespace MyGraphs
 
         Dictionary<int, List<MyListGraphEdge>> m_DListNode;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="isDirectGraph">Mặc định là đồ thị vô hướng, nếu đặt bằng true sẽ là đồ thị có hướng</param>
         public MyListGraph(bool isDirectGraph = false)
         {
             m_iNumEdge = 0;
@@ -72,17 +76,14 @@ namespace MyGraphs
         /// <returns>Return Index of Node. If fail to add node, return -1</returns>
         public int AddNode(MyGraphNode node)
         {
-            node.setIndex(index: GetNextFreeNodeIndex());
+            if (node.getIndex() == 0)
+                node.setIndex(index: GetNextFreeNodeIndex());
 
-            if (true)
+            if (!isPresent(node.getIndex()))
             {
                 m_Nodes.Add(node);
-                return node.getIndex();
             }
-            else
-            {
-                return -1;
-            }
+            return node.getIndex();
         }
 
         /// <summary>
@@ -121,6 +122,20 @@ namespace MyGraphs
             {
                 m_DListNode.Add(from, new List<MyListGraphEdge>());
                 m_DListNode[from].Add(new MyListGraphEdge(to, cost));
+            }
+
+            //// Nếu là đồ thị vô hướng thì thêm 1 cạnh ngược lại
+            if (!this.m_bDigraph)
+            {
+                if (m_DListNode.ContainsKey(to))
+                {
+                    m_DListNode[to].Add(new MyListGraphEdge(from, cost));
+                }
+                else
+                {
+                    m_DListNode.Add(to, new List<MyListGraphEdge>());
+                    m_DListNode[to].Add(new MyListGraphEdge(from, cost));
+                }
             }
             m_iNumEdge++;
             return true;
@@ -256,7 +271,7 @@ namespace MyGraphs
 
 
         /// <summary>
-        ///  Xóa khuyên và cạnh song song
+        ///  Xóa khuyên và cạnh song song. Nếu có cạnh song song thì chọn cạnh có trọng số nhỏ nhất
         /// </summary>
         public void MakeSimpleGraph()
         {
@@ -275,19 +290,56 @@ namespace MyGraphs
                             m_DListNode[from].RemoveAt(j);
                         }
 
-                        // Xóa cạnh song song
-                        if (m_DListNode.ContainsKey(to))
+                        if(this.m_bDigraph)
                         {
-                            for (int k = 0; k < m_DListNode[to].Count; k++)
+                            // Xóa cạnh song song
+                            if (m_DListNode.ContainsKey(to))
                             {
-                                if (m_DListNode[to][k].GetTo() == from)
+                                for (int k = 0; k < m_DListNode[to].Count; k++)
                                 {
-                                    m_DListNode[to].RemoveAt(k);
+                                    if (m_DListNode[to][k].GetTo() == from)
+                                    {
+                                        // Xóa cạnh song song có trọng số lớn hơn
+                                        if (m_DListNode[to][k].GetCost() > m_DListNode[from][j].GetCost())
+                                        {
+                                            m_DListNode[to].RemoveAt(k);
+                                        }
+                                        else
+                                        {
+                                            m_DListNode[from].RemoveAt(j);
+                                        }
+                                        // m_DListNode[to].RemoveAt(k);
+                                    }
                                 }
                             }
-                        }
+                        }                        
                     }
                 }
+            }
+        }
+
+        public void PrintGraphInConsole()
+        {
+            Console.Write("Canh: ");
+            for (int i = 0; i < m_Nodes.Count; i++)
+            {
+                Console.Write(" " + m_Nodes[i].getIndex() + ",");
+            }
+
+            Console.WriteLine("\n So Canh:");
+            for (int i = 0; i < m_Nodes.Count; i++)
+            {
+                int from = m_Nodes[i].getIndex();
+                if (m_DListNode.ContainsKey(from))
+                {
+                    Console.Write("(" + from.ToString() + "): ");
+                    for (int j = 0; j < m_DListNode[from].Count; j++)
+                    {
+                        Console.Write(" -" + m_DListNode[from][j].GetTo() + "," + m_DListNode[from][j].GetCost() + "- ");
+                    }
+                }
+                Console.WriteLine();
+
             }
         }
 
@@ -365,6 +417,87 @@ namespace MyGraphs
                     m_Nodes[i].SetLable(newLable);
                 }
             }
+        }
+
+        /// <summary>
+        /// Tìm cây khung có trọng số nhỏ nhất
+        /// </summary>
+        /// <returns></returns>
+        public MyListGraph PrimAlgo(MyGraphNode startNode)
+        {
+            MyListGraph result = new MyListGraph();
+
+            List<int> p_fNodes = new List<int>();
+            List<MyGraphEdge> p_fEdges = new List<MyGraphEdge>();
+
+
+            p_fNodes.Add(startNode.getIndex());
+
+            while (p_fEdges.Count < this.m_Nodes.Count)
+            {
+                MyGraphEdge edge = PrimFindEdge(p_fNodes, p_fEdges);
+                if (edge != null)
+                {
+                    p_fNodes.Add(edge.GetTo());
+                    p_fEdges.Add(edge);
+                }
+                else
+                {
+                    // Đồ thị không liên thông
+                    break;
+                }
+            }
+
+            for (int i = 0; i < p_fNodes.Count; i++)
+            {
+                result.AddNode(new MyGraphNode(p_fNodes[i]));
+            }
+            for (int i = 0; i < p_fEdges.Count; i++)
+            {
+                result.AddEdge(p_fEdges[i]);
+            }
+
+            return result;
+        }
+
+        private MyGraphEdge PrimFindEdge(List<int> p_fNodes, List<MyGraphEdge> p_fEdges)
+        {
+            MyGraphEdge result = null;
+            float m_fmin = float.MaxValue;
+
+            for (int i = 0; i < p_fNodes.Count; i++)
+            {
+
+                // Nếu node có chứa cạnh thì tìm ra cạnh có trọng số nhỏ nhất
+                if (this.m_DListNode.ContainsKey(p_fNodes[i]))
+                {
+                    for (int j = 0; j < m_DListNode[p_fNodes[i]].Count; j++)
+                    {
+                        // Nếu node đến ko chứa trong mảng đã có thì so sánh
+                        MyListGraphEdge temp = m_DListNode[p_fNodes[i]][j];
+
+                        if (p_fNodes.Contains(temp.GetTo()))
+                        {
+                            continue;
+                        }
+
+                        //if (!this.m_bDigraph)
+                        //{
+                        //    if (p_fNodes.Contains(p_fNodes[i]))
+                        //        continue;
+                        //}
+                        if (m_fmin > temp.GetCost())
+                        {
+                            m_fmin = temp.GetCost();
+                            result = new MyGraphEdge(p_fNodes[i], temp.GetTo(), temp.GetCost());
+                        }
+
+                    }
+                }
+            }
+
+
+            return result;
         }
         #endregion
 
