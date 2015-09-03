@@ -35,6 +35,8 @@ namespace MainConsole
 
             graph.PrintGraphInConsole();
             prim.PrintGraphInConsole();
+
+            List<MyGraphEdge> path = prim.FindTheShortestPath(1, 3);
         }
     }
 }

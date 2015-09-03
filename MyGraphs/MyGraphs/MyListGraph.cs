@@ -290,7 +290,7 @@ namespace MyGraphs
                             m_DListNode[from].RemoveAt(j);
                         }
 
-                        if(this.m_bDigraph)
+                        if (this.m_bDigraph)
                         {
                             // Xóa cạnh song song
                             if (m_DListNode.ContainsKey(to))
@@ -312,7 +312,7 @@ namespace MyGraphs
                                     }
                                 }
                             }
-                        }                        
+                        }
                     }
                 }
             }
@@ -363,7 +363,7 @@ namespace MyGraphs
 
 
         // Function
-        #region Advance Function
+        #region Prim Function
 
         public int SoMienDoThiLienThong()
         {
@@ -425,7 +425,7 @@ namespace MyGraphs
         /// <returns></returns>
         public MyListGraph PrimAlgo(MyGraphNode startNode)
         {
-            MyListGraph result = new MyListGraph();
+            MyListGraph result = new MyListGraph(this.m_bDigraph);
 
             List<int> p_fNodes = new List<int>();
             List<MyGraphEdge> p_fEdges = new List<MyGraphEdge>();
@@ -499,6 +499,132 @@ namespace MyGraphs
 
             return result;
         }
+
+        #endregion
+
+        #region Dijktra Function
+
+        public List<MyGraphEdge> FindTheShortestPath(int fromNode, int toNode)
+        {
+            List<Dijktra_node> BeyoundT = new List<Dijktra_node>();
+            Dijktra_node f_fromNode = new Dijktra_node(), f_toNode = new Dijktra_node();
+            List<MyGraphEdge> result = new List<MyGraphEdge>();
+
+            Dijktra_init(fromNode, toNode, ref f_fromNode, ref f_toNode, BeyoundT);
+            int current_sequence = 0;
+            int last_node = fromNode;
+            // Trong khi chưa đạt đến đích thì tiếp tục
+            while (f_toNode.check)
+            {
+                Dijktra_node node = DijktraFindEdge(BeyoundT);
+                if (node == null)
+                {
+                    break;
+                }
+                node.sequence = current_sequence;
+                current_sequence += 1;
+                MyGraphEdge edge = new MyGraphEdge(last_node, node.index, node.lenght);
+                result.Add(edge);
+
+                last_node = node.index;
+                node.check = false;
+                ImprovePaths(node, BeyoundT);
+            }
+
+            return result;
+        }
+
+
+
+        /// <summary>
+        /// Tìm cạnh có độ dài nhỏ nhất
+        /// </summary>
+        /// <param name="listnode"></param>
+        /// <returns></returns>
+        private Dijktra_node DijktraFindEdge(List<Dijktra_node> listnode)
+        {
+            float min_path = float.MaxValue;
+            int index_node = -1;
+            for (int i = 0; i < listnode.Count; i++)
+            {
+                if(!listnode[i].check)
+                {
+                    if (listnode[i].lenght < min_path)
+                    {
+                        min_path = listnode[i].lenght;
+                        index_node = i;
+                    }
+                }                
+            }
+            
+            if(index_node != -1)
+            {
+                return listnode[index_node];
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Nâng cấp các đỉnh có cạnh nối đến node tìm ra
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="listnode"></param>
+        private void ImprovePaths(Dijktra_node node, List<Dijktra_node> listnode)
+        {
+            int index = node.index;
+            for(int i =0; i < m_DListNode[index].Count; i++)
+            {
+                for(int j = 0; j < listnode.Count; j++)
+                {
+                    if(listnode[j].check)
+                    {
+                        float dist = listnode[j].lenght += m_DListNode[index][i].GetCost();
+                        if (m_DListNode[index][i].GetTo() == listnode[j].index)
+                        {
+                            if (listnode[j].lenght == -1 && listnode[j].lenght > dist)
+                            {
+                                listnode[j].lenght = dist;
+                            }                            
+                        }
+                    }                    
+                }
+            }
+        }
+
+
+        private void Dijktra_init(int fromNode, int toNode, ref Dijktra_node f_fromNode, ref Dijktra_node f_toNode, List<Dijktra_node> BeyoundT)
+        {
+            for (int i = 0; i < this.m_Nodes.Count; i++)
+            {
+                Dijktra_node node = new Dijktra_node();
+                node.index = this.m_Nodes[i].getIndex();
+                node.check = true;
+                node.sequence = -1;
+                node.lenght = -1;
+
+                if (fromNode == node.index)
+                {
+                    f_fromNode = node;
+                    f_fromNode.check = false;
+                }
+
+                if (toNode == node.index)
+                {
+                    f_toNode = node;
+                }
+
+                BeyoundT.Add(node);
+            }
+        }
+
+        private class Dijktra_node
+        {
+            public int index;
+            public bool check;
+            public int sequence;
+            public float lenght;
+        }
+
         #endregion
 
     }
