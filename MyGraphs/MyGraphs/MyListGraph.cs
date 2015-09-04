@@ -511,7 +511,6 @@ namespace MyGraphs
             List<MyGraphEdge> result = new List<MyGraphEdge>();
 
             Dijktra_init(fromNode, toNode, ref f_fromNode, ref f_toNode, BeyoundT);
-            int current_sequence = 0;
             int last_node = fromNode;
             // Trong khi chưa đạt đến đích thì tiếp tục
             while (f_toNode.check)
@@ -521,39 +520,12 @@ namespace MyGraphs
                 {
                     break;
                 }
-                ImprovePaths(node, BeyoundT);
-
-                MyGraphEdge edge = new MyGraphEdge(node.preNode, node.index, node.lenght);
-                result.Add(edge);
+                ImprovePaths(node, BeyoundT);                
             }
 
-            result = UpdatePath(result);
+            result = UpdatePath(BeyoundT, fromNode, toNode);
             return result;
-        }
-
-        private List<MyGraphEdge> UpdatePath(List<MyGraphEdge> path)
-        {
-            if (path == null || path.Count <= 1)
-            {
-                return path;
-            }
-
-            List<MyGraphEdge> result = new List<MyGraphEdge>();
-            MyGraphEdge el = new MyGraphEdge(path.Last().GetFrom(), path.Last().GetTo(), path.Last().GetCost());
-            result.Add(el);
-            for (int i = path.Count - 2; i >= 0; i--)
-            {
-                for (int j = 0; j < path.Count; j++)
-                {
-                    if (path[j].GetTo() == result.Last().GetFrom())
-                    {
-                        MyGraphEdge edge = new MyGraphEdge(path[j].GetFrom(), path[j].GetTo(), path[j].GetCost());
-                        result.Add(edge);
-                    }
-                }
-            }
-            return result;
-        }
+        }        
 
         /// <summary>
         /// Chọn node có length nhỏ nhất và loại ra khỏi listnode. Trả về null nếu ko tìm thấy
@@ -566,8 +538,10 @@ namespace MyGraphs
             int index_node = -1;
             for (int i = 0; i < listnode.Count; i++)
             {
+                // Nếu node thuộc T thì kiểm tra
                 if (listnode[i].check)
                 {
+                    // Nếu node đó 
                     if (listnode[i].lenght < min_path && listnode[i].lenght != -1)
                     {
                         min_path = listnode[i].lenght;
@@ -576,8 +550,10 @@ namespace MyGraphs
                 }
             }
 
+            // Nếu tìm thấy đỉnh
             if (index_node != -1)
             {
+                // Loại node ra khỏi T
                 listnode[index_node].check = false;
                 return listnode[index_node];
             }
@@ -599,10 +575,11 @@ namespace MyGraphs
                 return;
             }
 
+
             // Lấy ds các node được kết nối với node vừa chọn
             for (int i = 0; i < m_DListNode[index].Count; i++)
             {
-                // Trong ds các node vừa chọn
+                // Trong ds các node liên kết với node được chọn
                 for (int j = 0; j < listnode.Count; j++)
                 {
                     // nếu node nào thuộc T mới update
@@ -611,18 +588,18 @@ namespace MyGraphs
                         // Nếu là node có kết nối đến node được chọn thì tiếp tục
                         if (m_DListNode[index][i].GetTo() == listnode[j].index)
                         {
-                            float tempdis = 0;
-                            if (listnode[j].lenght == -1)
-                            {
-                                tempdis = 0;
-                            }
-                            else
-                            {
-                                tempdis = listnode[j].lenght;
-                            }
+                            //float tempdis = 0;
+                            //if (listnode[j].lenght == -1)
+                            //{
+                            //    tempdis = 0;
+                            //}
+                            //else
+                            //{
+                            //    tempdis = m_DListNode[index][i].GetCost();
+                            //}
                             // Tinhs khoảng cách từ đỉnh vừa chọn đến đỉnh có cạnh nối
-                            float dist = tempdis + m_DListNode[index][i].GetCost();
-                            if (listnode[j].lenght == -1 || listnode[j].lenght > dist)
+                            float dist = node.lenght + m_DListNode[index][i].GetCost();
+                            if (listnode[j].lenght == -1||listnode[j].lenght > dist)
                             {
                                 listnode[j].lenght = dist;
                                 listnode[j].preNode = index;
@@ -633,6 +610,34 @@ namespace MyGraphs
             }
         }
 
+        private List<MyGraphEdge> UpdatePath(List<Dijktra_node> path, int from, int to)
+        {
+            List<MyGraphEdge> result = new List<MyGraphEdge>();
+            int current_node = to;
+
+            do
+            {
+                for(int i = 0; i < path.Count; i++)
+                {
+                    if(path[i].check == false)
+                    {
+                        if (path[i].index == current_node)
+                        {
+                            MyGraphEdge edge = new MyGraphEdge(path[i].preNode, path[i].index, path[i].lenght);
+                            result.Add(edge);
+                            current_node = path[i].preNode;
+                        }
+                    }                    
+                }
+            }
+            while (current_node != from);
+
+
+            result.Reverse();
+            //result.RemoveAt(0);
+            return result;
+        }
+
         private void Dijktra_init(int fromNode, int toNode, ref Dijktra_node f_fromNode, ref Dijktra_node f_toNode, List<Dijktra_node> BeyoundT)
         {
             for (int i = 0; i < this.m_Nodes.Count; i++)
@@ -641,6 +646,7 @@ namespace MyGraphs
                 node.index = this.m_Nodes[i].getIndex();
                 node.check = true;
                 node.lenght = -1;
+                node.preNode = -1;
 
                 if (fromNode == node.index)
                 {
