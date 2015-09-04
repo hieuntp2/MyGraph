@@ -521,23 +521,42 @@ namespace MyGraphs
                 {
                     break;
                 }
-                node.sequence = current_sequence;
-                current_sequence += 1;
-                MyGraphEdge edge = new MyGraphEdge(last_node, node.index, node.lenght);
-                result.Add(edge);
-
-                last_node = node.index;
-                node.check = false;
                 ImprovePaths(node, BeyoundT);
+
+                MyGraphEdge edge = new MyGraphEdge(node.preNode, node.index, node.lenght);
+                result.Add(edge);
             }
 
+            result = UpdatePath(result);
             return result;
         }
 
+        private List<MyGraphEdge> UpdatePath(List<MyGraphEdge> path)
+        {
+            if (path == null || path.Count <= 1)
+            {
+                return path;
+            }
 
+            List<MyGraphEdge> result = new List<MyGraphEdge>();
+            MyGraphEdge el = new MyGraphEdge(path.Last().GetFrom(), path.Last().GetTo(), path.Last().GetCost());
+            result.Add(el);
+            for (int i = path.Count - 2; i >= 0; i--)
+            {
+                for (int j = 0; j < path.Count; j++)
+                {
+                    if (path[j].GetTo() == result.Last().GetFrom())
+                    {
+                        MyGraphEdge edge = new MyGraphEdge(path[j].GetFrom(), path[j].GetTo(), path[j].GetCost());
+                        result.Add(edge);
+                    }
+                }
+            }
+            return result;
+        }
 
         /// <summary>
-        /// Tìm cạnh có độ dài nhỏ nhất
+        /// Chọn node có length nhỏ nhất và loại ra khỏi listnode. Trả về null nếu ko tìm thấy
         /// </summary>
         /// <param name="listnode"></param>
         /// <returns></returns>
@@ -547,18 +566,19 @@ namespace MyGraphs
             int index_node = -1;
             for (int i = 0; i < listnode.Count; i++)
             {
-                if(!listnode[i].check)
+                if (listnode[i].check)
                 {
-                    if (listnode[i].lenght < min_path)
+                    if (listnode[i].lenght < min_path && listnode[i].lenght != -1)
                     {
                         min_path = listnode[i].lenght;
                         index_node = i;
                     }
-                }                
+                }
             }
-            
-            if(index_node != -1)
+
+            if (index_node != -1)
             {
+                listnode[index_node].check = false;
                 return listnode[index_node];
             }
             return null;
@@ -571,26 +591,47 @@ namespace MyGraphs
         /// <param name="listnode"></param>
         private void ImprovePaths(Dijktra_node node, List<Dijktra_node> listnode)
         {
+            // Lấy index node vừa thêm
             int index = node.index;
-            for(int i =0; i < m_DListNode[index].Count; i++)
+
+            if (!m_DListNode.ContainsKey(index))
             {
-                for(int j = 0; j < listnode.Count; j++)
+                return;
+            }
+
+            // Lấy ds các node được kết nối với node vừa chọn
+            for (int i = 0; i < m_DListNode[index].Count; i++)
+            {
+                // Trong ds các node vừa chọn
+                for (int j = 0; j < listnode.Count; j++)
                 {
-                    if(listnode[j].check)
+                    // nếu node nào thuộc T mới update
+                    if (listnode[j].check)
                     {
-                        float dist = listnode[j].lenght += m_DListNode[index][i].GetCost();
+                        // Nếu là node có kết nối đến node được chọn thì tiếp tục
                         if (m_DListNode[index][i].GetTo() == listnode[j].index)
                         {
-                            if (listnode[j].lenght == -1 && listnode[j].lenght > dist)
+                            float tempdis = 0;
+                            if (listnode[j].lenght == -1)
+                            {
+                                tempdis = 0;
+                            }
+                            else
+                            {
+                                tempdis = listnode[j].lenght;
+                            }
+                            // Tinhs khoảng cách từ đỉnh vừa chọn đến đỉnh có cạnh nối
+                            float dist = tempdis + m_DListNode[index][i].GetCost();
+                            if (listnode[j].lenght == -1 || listnode[j].lenght > dist)
                             {
                                 listnode[j].lenght = dist;
-                            }                            
+                                listnode[j].preNode = index;
+                            }
                         }
-                    }                    
+                    }
                 }
             }
         }
-
 
         private void Dijktra_init(int fromNode, int toNode, ref Dijktra_node f_fromNode, ref Dijktra_node f_toNode, List<Dijktra_node> BeyoundT)
         {
@@ -599,13 +640,12 @@ namespace MyGraphs
                 Dijktra_node node = new Dijktra_node();
                 node.index = this.m_Nodes[i].getIndex();
                 node.check = true;
-                node.sequence = -1;
                 node.lenght = -1;
 
                 if (fromNode == node.index)
                 {
                     f_fromNode = node;
-                    f_fromNode.check = false;
+                    f_fromNode.lenght = 0;
                 }
 
                 if (toNode == node.index)
@@ -621,7 +661,7 @@ namespace MyGraphs
         {
             public int index;
             public bool check;
-            public int sequence;
+            public int preNode;
             public float lenght;
         }
 
