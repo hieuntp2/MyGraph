@@ -29,7 +29,7 @@ namespace MainConsole
             //graph.AddEdge(new MyGraphEdge(3, 1, 4));
             //graph.AddEdge(new MyGraphEdge(1, 2, 7));
 
-            MyListGraph graph = new MyListGraph(true);
+            MyListGraph graph = new MyListGraph(false);
             graph.AddNode(new MyGraphNode(0));
             graph.AddNode(new MyGraphNode(1));
             graph.AddNode(new MyGraphNode(2));

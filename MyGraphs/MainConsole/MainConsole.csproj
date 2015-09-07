@@ -50,6 +50,10 @@
       <Project>{f7ea9bd8-a13f-4ca0-bc15-45ccf502af26}</Project>
       <Name>MyGraphs</Name>
     </ProjectReference>
+    <ProjectReference Include="..\MyPathPlaner\MyPathPlanner.csproj">
+      <Project>{8fe68767-56ab-4fd6-a689-9e023b6c290b}</Project>
+      <Name>MyPathPlanner</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
