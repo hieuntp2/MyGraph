@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{7EB6E7E4-EE08-4E37-99AC-8A8CF4DD8FDF}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{8FE68767-56AB-4FD6-A689-9E023B6C290B}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MainConsole</RootNamespace>
-    <AssemblyName>MainConsole</AssemblyName>
+    <RootNamespace>MyPathPlaner</RootNamespace>
+    <AssemblyName>MyPathPlaner</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -29,9 +29,6 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
-  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -42,21 +39,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="MyPathPlanner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\GameLibrary\GameLibrary.csproj">
-      <Project>{fcf40efa-95cf-45d3-a4a9-a97046f31818}</Project>
-      <Name>GameLibrary</Name>
-    </ProjectReference>
     <ProjectReference Include="..\MyGraphs\MyGraphs.csproj">
       <Project>{f7ea9bd8-a13f-4ca0-bc15-45ccf502af26}</Project>
       <Name>MyGraphs</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\MyPathPlaner\MyPathPlanner.csproj">
-      <Project>{8fe68767-56ab-4fd6-a689-9e023b6c290b}</Project>
-      <Name>MyPathPlanner</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

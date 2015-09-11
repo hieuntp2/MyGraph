@@ -626,6 +626,11 @@ namespace MyGraphs
                             MyGraphEdge edge = new MyGraphEdge(path[i].preNode, path[i].index, path[i].lenght);
                             result.Add(edge);
                             current_node = path[i].preNode;
+
+                            if(current_node == from)
+                            {
+                                break;
+                            }
                         }
                     }                    
                 }
