@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MyGraphs;
 using System.IO;
 using MyPathPlaner;
@@ -141,70 +139,4 @@ namespace GameLibrary
             x = y = 0;
         }
     }
-
-    public class GameObject
-    {
-        private int m_iID;
-        private static int m_iNextValidID;
-
-        public void SetID(int id)
-        {
-            this.m_iID = id;
-            m_iNextValidID += 1;
-        }
-
-        public GameObject(int? id = null)
-        {
-            if(id==null)
-            {
-                this.SetID(m_iNextValidID);
-            }
-        }
-
-        public int GetID()
-        {
-            return m_iID;
-        }
-
-        public static int GetNextValidID()
-        {
-            return m_iNextValidID;
-        }
-    }
-
-    public class MyBots : GameObject
-    {
-        private MyState m_cCurrentState;
-        private Vector2 m_cCurrentPosition;
-        private int m_iCurrentIndexLocation;
-        
-        // some propertiese
-        private int m_iHealth;
-        private int m_iWood;
-        private int m_iFood;       
-        private int m_iCurrentWater;
-        private int m_iCurrentThirsty;
-        private int m_iCurrentTired;
-        private int m_iCurrentHungry;
-        private int m_CurrentEnery;
-        private float m_fSpeed;
-
-        private Weapon m_iCurrentWeapon;
-
-        public void ChangeState(MyState newState)
-        {
-            m_cCurrentState.Exit(this);
-            m_cCurrentState = newState;
-            m_cCurrentState.Enter(this);
-        }
-
-        public void Update()
-        {
-            if(m_cCurrentState != null)
-            {
-                m_cCurrentState.Execute(this);
-            }
-        }
-    }    
-    
 }

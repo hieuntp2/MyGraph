@@ -1,0 +1,7 @@
+﻿
+namespace GameLibrary
+{
+    class Weapon
+    {
+    }
+}

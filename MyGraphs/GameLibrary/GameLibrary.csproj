@@ -39,9 +39,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Object\State\MyDeliveryState.cs" />
-    <Compile Include="Object\State\MyState.cs" />
-    <Compile Include="Object\Weapon\Weapon.cs" />
+    <Compile Include="MObject\GameObject.cs" />
+    <Compile Include="MObject\MyBots.cs" />
+    <Compile Include="MObject\MyEntityManager.cs" />
+    <Compile Include="MObject\MyMessageSystem\MessageDispatcher.cs" />
+    <Compile Include="MObject\MyMessageSystem\Telegram.cs" />
+    <Compile Include="MObject\State\MyDeliveryState.cs" />
+    <Compile Include="MObject\State\MyState.cs" />
+    <Compile Include="MObject\State\MyStateMachine.cs" />
+    <Compile Include="MObject\Weapon\Weapon.cs" />
     <Compile Include="MyMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -1,7 +1,0 @@
-E:\6. My Project\net\3. MyGraph\trunk\MyGraphs\UnitTestProject1\bin\Debug\UnitTestProject1.dll
-E:\6. My Project\net\3. MyGraph\trunk\MyGraphs\UnitTestProject1\bin\Debug\UnitTestProject1.pdb
-E:\6. My Project\net\3. MyGraph\trunk\MyGraphs\UnitTestProject1\bin\Debug\MyGraphs.dll
-E:\6. My Project\net\3. MyGraph\trunk\MyGraphs\UnitTestProject1\bin\Debug\MyGraphs.pdb
-E:\6. My Project\net\3. MyGraph\trunk\MyGraphs\UnitTestProject1\obj\Debug\UnitTestProject1.csprojResolveAssemblyReference.cache
-E:\6. My Project\net\3. MyGraph\trunk\MyGraphs\UnitTestProject1\obj\Debug\UnitTestProject1.dll
-E:\6. My Project\net\3. MyGraph\trunk\MyGraphs\UnitTestProject1\obj\Debug\UnitTestProject1.pdb
