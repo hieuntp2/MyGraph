@@ -40,6 +40,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MObject\GameObject.cs" />
+    <Compile Include="MObject\MEnvironment\MyEnvironment.cs" />
+    <Compile Include="MObject\MEnvironment\Resources\MyTree.cs" />
+    <Compile Include="MObject\MEnvironment\Terrain\MyGrass.cs" />
     <Compile Include="MObject\MyBots.cs" />
     <Compile Include="MObject\MyEntityManager.cs" />
     <Compile Include="MObject\MyMessageSystem\MessageDispatcher.cs" />
@@ -64,6 +67,7 @@
   <ItemGroup>
     <Content Include="map1.txt" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
