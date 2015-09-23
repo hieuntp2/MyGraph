@@ -1,7 +1,7 @@
 ﻿
 namespace GameLibrary
 {
-    class Weapon
+    public class Weapon
     {
     }
 }

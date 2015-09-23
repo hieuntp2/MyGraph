@@ -6,22 +6,22 @@ namespace GameLibrary.MObject
     public class MyBots : GameObject
     {
         private MyStateMachine m_cStateMachine;
-        private Vector2 m_cCurrentPosition;
-        private int m_iCurrentIndexLocation;
+        public Vector2 m_cCurrentPosition { get; set; }
+        public int m_iCurrentIndexLocation { get; set; }
 
         // some propertiese
-        private int m_iHealth;
-        private int m_iWood;
-        private int m_iFood;
-        private int m_iCurrentWater;
-        private int m_iCurrentThirsty;
-        private int m_iCurrentTired;
-        private int m_iCurrentHungry;
-        private int m_CurrentEnery;
-        private float m_fSpeed;
+        public int m_iHealth { get; set; }
+        public int m_iWood { get; set; }
+        public int m_iFood { get; set; }
+        public int m_iCurrentWater { get; set; }
+        public int m_iCurrentThirsty { get; set; }
+        public int m_iCurrentTired { get; set; }
+        public int m_iCurrentHungry { get; set; }
+        public int m_CurrentEnery { get; set; }
+        public float m_fSpeed { get; set; }
 
-        private Weapon m_iCurrentWeapon;     
-  
+        public Weapon m_iCurrentWeapon { get; set; }
+
         public MyBots()
         {
             m_cStateMachine = new MyStateMachine(this);
@@ -41,5 +41,7 @@ namespace GameLibrary.MObject
         {
             return m_cStateMachine.HandleMessage(message);
         }
-    }    
+
+
+    }
 }

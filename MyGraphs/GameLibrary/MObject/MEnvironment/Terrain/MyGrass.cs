@@ -13,5 +13,10 @@ namespace GameLibrary.MObject.MEnvironment.Terrain
             Cost = 1;
             ID_CLASS = 1;
         }
+
+        public override bool HandleMessage(MyMessageSystem.Telegram message)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

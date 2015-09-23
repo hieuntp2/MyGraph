@@ -9,5 +9,9 @@ namespace GameLibrary.MObject.MEnvironment.Resources
     public class MyTree: MyEnvironment
     {
 
+        public override bool HandleMessage(MyMessageSystem.Telegram message)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
