@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyPathPlanner", "MyPathPlan
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameLibrary", "GameLibrary\GameLibrary.csproj", "{FCF40EFA-95CF-45D3-A4A9-A97046F31818}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "G4", "G4\G4.csproj", "{E580AC57-37D6-4985-A8AC-65816061845E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{FCF40EFA-95CF-45D3-A4A9-A97046F31818}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FCF40EFA-95CF-45D3-A4A9-A97046F31818}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FCF40EFA-95CF-45D3-A4A9-A97046F31818}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E580AC57-37D6-4985-A8AC-65816061845E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E580AC57-37D6-4985-A8AC-65816061845E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E580AC57-37D6-4985-A8AC-65816061845E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E580AC57-37D6-4985-A8AC-65816061845E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
