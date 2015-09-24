@@ -44,6 +44,7 @@
     <Compile Include="MObject\MEnvironment\Resources\MyTree.cs" />
     <Compile Include="MObject\MEnvironment\Terrain\MyGrass.cs" />
     <Compile Include="MObject\MyBots.cs" />
+    <Compile Include="MObject\MyData\MyData.cs" />
     <Compile Include="MObject\MyEntityManager.cs" />
     <Compile Include="MObject\MyMessageSystem\MessageDispatcher.cs" />
     <Compile Include="MObject\MyMessageSystem\Telegram.cs" />
@@ -66,6 +67,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="map1.txt" />
+    <Content Include="MObject\MyData\playerinfo.txt" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
